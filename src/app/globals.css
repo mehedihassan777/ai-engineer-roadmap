@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: <html class="dark">, set before first paint by the inline script in layout.tsx. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic colour tokens. Components use bg-surface, text-muted, border-line ... and never need dark: for them. */
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --surface: #ffffff;
+  --surface-muted: #f1f5f9;
+  --line: #e2e8f0;
+  --muted: #55637a;
+  --accent: #4f46e5;
+  --accent-soft: #eef2ff;
+  --accent-foreground: #ffffff;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0b1120;
+  --foreground: #e2e8f0;
+  --surface: #111a2e;
+  --surface-muted: #18233b;
+  --line: #243049;
+  --muted: #94a3b8;
+  --accent: #818cf8;
+  --accent-soft: #1b2347;
+  --accent-foreground: #0b1120;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-foreground: var(--accent-foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Native <dialog> elements get their own look in components; this just removes the UA border/padding. */
+dialog {
+  border: 0;
+  padding: 0;
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
