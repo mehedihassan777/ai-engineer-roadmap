@@ -3,6 +3,7 @@
 import { summarizeState } from "@/lib/state/export-import";
 import type { PersistedState } from "@/lib/state/types";
 import { formatDate } from "@/lib/dates";
+import { useSyncSnapshot } from "@/hooks/useSync";
 import { ConfirmDialog } from "../ui/ConfirmDialog";
 
 export interface PendingImport {
@@ -20,6 +21,7 @@ interface ImportDialogProps {
 
 /** Shows what an import would replace, side by side, before anything is overwritten. */
 export function ImportDialog({ pending, current, onConfirm, onCancel }: ImportDialogProps) {
+  const syncConnected = useSyncSnapshot().connected;
   const incoming = pending ? summarizeState(pending.state) : null;
   const existing = summarizeState(current);
 
@@ -48,6 +50,11 @@ export function ImportDialog({ pending, current, onConfirm, onCancel }: ImportDi
         <strong>{pending?.fileName}</strong> will replace everything currently saved in this browser. Your current data is kept as a
         one-step undo.
       </p>
+      {syncConnected && (
+        <p className="rounded-lg bg-sky-50 p-3 text-sky-900 dark:bg-sky-500/10 dark:text-sky-200">
+          Cloud sync is on: the imported data will also replace your progress in the cloud and on your other devices.
+        </p>
+      )}
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-line text-xs text-muted uppercase">

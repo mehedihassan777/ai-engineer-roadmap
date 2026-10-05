@@ -4,6 +4,7 @@ import { Trash } from "lucide-react";
 import { useId, useState } from "react";
 import { actions } from "@/hooks/useAppState";
 import { useHydrated } from "@/hooks/useHydrated";
+import { useSyncSnapshot } from "@/hooks/useSync";
 import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
 import { ConfirmDialog } from "../ui/ConfirmDialog";
@@ -13,6 +14,7 @@ const CONFIRM_WORD = "RESET";
 export function DangerZoneCard() {
   const inputId = useId();
   const hydrated = useHydrated();
+  const syncConnected = useSyncSnapshot().connected;
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState("");
 
@@ -47,6 +49,11 @@ export function DangerZoneCard() {
         onCancel={close}
       >
         <p>This removes all of your progress from this browser. Export a backup first if you might want it back.</p>
+        {syncConnected && (
+          <p className="rounded-lg bg-rose-50 p-3 font-medium text-rose-800 dark:bg-rose-500/10 dark:text-rose-200">
+            Cloud sync is on: the reset also clears your progress in the cloud, so your other devices will be emptied the next time they sync.
+          </p>
+        )}
         <div>
           <label htmlFor={inputId} className="mb-1 block font-medium">
             Type {CONFIRM_WORD} to confirm

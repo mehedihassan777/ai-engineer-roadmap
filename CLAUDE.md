@@ -3,10 +3,10 @@
 # AI Engineer Roadmap — project guide
 
 A personal 24-week "AI Engineer Roadmap" tracker: Next.js (App Router) + TypeScript (strict) + Tailwind CSS.
-**No backend.** Progress lives in the browser's `localStorage` and can be exported/imported as JSON.
+Progress lives in the browser's `localStorage` (export/import as JSON). **Optional cloud sync**: when the server has `DATABASE_URL` (Neon) and `SYNC_TOKEN`, two route handlers (`/api/sync`, `/api/health`) let every device with the token share the same progress. Without them the app is purely client-side.
 **All roadmap content is typed data in `src/data/`**, kept separate from UI so content can be edited without touching components.
 
-> Build status: stages 1–3 of 6 done (scaffold, data layer + logic, app shell + dashboard / this week / timeline / all tasks / settings). Still to come: projects, stack pages, learn-vs-delegate and the DSA tracker (stage 4); weeks 3–24 and projects 2–5 (stages 4–5); final docs and hardening (stage 6). Sections marked _(planned)_ describe that later work — update this file as each stage lands.
+> Build status: stages 1–3 of 6 done (scaffold, data layer + logic, app shell + dashboard / this week / timeline / all tasks / settings), plus optional Neon cloud sync. Still to come: projects, stack pages, learn-vs-delegate and the DSA tracker (stage 4); weeks 3–24 and projects 2–5 (stages 4–5); final docs and hardening (stage 6). Sections marked _(planned)_ describe that later work — update this file as each stage lands.
 
 ## Commands
 
@@ -19,6 +19,9 @@ A personal 24-week "AI Engineer Roadmap" tracker: Next.js (App Router) + TypeScr
 | `npm test` / `npm run test:watch` | Vitest: unit tests for `src/lib` and the content validator for `src/data` |
 | `npm run validate:content` | Only the content validator (run it after editing `src/data`) |
 | `npm run check:links` | Fetches every URL in `src/data` and reports broken or moved ones |
+| `npm run db:migrate` | Applies `db/migrations.mjs` to Neon (prefers `DATABASE_URL_UNPOOLED`) |
+| `npm run sync:doctor` | Checks sync env vars, DB connection, schema and a compare-and-swap round trip (throw-away workspace) |
+| `npm run sync:token` | Prints a random token for `SYNC_TOKEN` |
 
 "Done" means `npm run lint`, `npm run typecheck`, `npm test` and `npm run build` all pass with no errors.
 
@@ -31,6 +34,10 @@ src/
   hooks/               React adapters: useAppState (the store), useSchedule, useProgress, useTheme, useHydrated, useToday
   lib/                 pure logic with *.test.ts beside each file
     state/             persisted-state types, parser, migrations, storage, transitions, store, export/import
+    sync/              sync client: protocol types, 3-way merge, HTTP transport, engine, device metadata
+  server/              sync API (server-only): config, token auth, repositories (SQL/Neon, dev memory), handlers, tests
+  app/api/             route handlers: sync (GET/PUT), health
+db/                    migrations.mjs + sync-sql.mjs (shared by the app, scripts and tests)
   data/                ALL roadmap content (typed, no React): constants.ts, ids.ts, types.ts, helpers.ts, resources.ts,
                        tracks.ts, phases.ts, dsa-patterns.ts, weeks/, projects/, stacks/, learn-vs-delegate.ts
 scripts/check-links.mjs
@@ -49,6 +56,15 @@ Dependencies point inward: `app/`, `components/`, `hooks/` → `lib/` → `data/
 - `src/components/**` — presentational and small (aim ≲120 lines, one component per file, typed props). No content literals inside components.
 - `src/app/**` — thin routes: pick data, render components.
 - Client components import `@/lib/content` (the resolved weeks/phases/tracks) rather than `@/data`, so routes do not ship project or stack content they never show. Pass project/stack data from server pages as props.
+
+## Cloud sync rules
+
+- **Design:** the server stores one JSON document per workspace with a revision (`sync_state`). `PUT` is a compare-and-swap on `baseRev` (409 + current state on mismatch). The client (`lib/sync/engine.ts`) pulls, 3-way merges (`lib/sync/merge.ts`: base = last agreed state in `air:v1:sync`), applies locally via `store.applyRemote`, then pushes. No timestamps, no per-item rows.
+- **Merge semantics** (change only with tests in `merge.test.ts` and `server/sync-multi-device.test.ts`): one side changed → take it; both changed → this device wins, except notes (both kept with a separator) and delete-vs-edit DSA entries (edit kept). First connect: union, more advanced task status wins, cloud start date wins, backup saved first.
+- **Secrets:** `src/server/**` is the only code that reads `DATABASE_URL`/`SYNC_TOKEN`; `deps.ts` imports `server-only`. Never prefix them with `NEXT_PUBLIC_`, never log them or the stored state. ESLint forbids importing `@/server/*` from `lib`/`data`.
+- **Fail closed:** no token (or < 32 chars) ⇒ sync off and the API answers 503. `SYNC_STORE=memory` is a dev-only store (refused in production) used for local end-to-end tests: the `dev-sync` entry in `.claude/launch.json` runs it on port 3101; open `localhost` and `127.0.0.1` to get two "devices" (allowed via `allowedDevOrigins` in `next.config.ts`).
+- **Schema changes:** add a new entry to `db/migrations.mjs` (never edit an applied one), adjust `db/sync-sql.mjs` and the repository tests (they run the real SQL on PGlite). If the persisted state shape changes, bump `SCHEMA_VERSION` too — older app versions then refuse newer cloud data with a clear message.
+- **Device-local data** (theme, `lastExportedAt`, the token, `air:v1:sync`) is never synced or exported. `toSyncedState` strips device-local fields.
 
 ## Next.js 16 notes
 
@@ -92,4 +108,6 @@ After any edit run `npm run validate:content` (it catches duplicate ids, missing
 - `npm audit` reports high-severity advisories inside the **dev-only** lint toolchain (`braces` → `fast-glob` → `eslint-config-next`). Nothing ships to the browser; `npm audit fix --force` would downgrade `eslint-config-next`, so do not run it.
 - ESLint is pinned to v9 because the React/import plugins bundled with `eslint-config-next` do not support v10 yet (npm prints a deprecation notice for 9.x — expected).
 - Vitest is pinned to v4: Vitest 5 does not list Node 25 as supported, and this machine runs Node 25.
-- `.claude/launch.json` defines the `dev` server (port 3100) used for in-app browser previews.
+- `.claude/launch.json` defines the `dev` server (port 3100) and `dev-sync` (port 3101, in-memory sync store, test token) for in-app browser previews.
+- **Never write JSON/config files with Windows PowerShell 5.1 `Set-Content -Encoding utf8` / `Out-File`**: they add a UTF-8 BOM, and Turbopack/Vercel then fail with ``Unexpected token '﻿'`` in `package.json`. Use the editor tools or `[IO.File]::WriteAllText(path, text)` (no BOM).
+- PGlite (tests) needs real timers: tests that use `vi.useFakeTimers()` must use the memory repository instead.

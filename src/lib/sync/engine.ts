@@ -355,11 +355,12 @@ export function createSyncEngine(options: EngineOptions): SyncEngine {
     saveMeta(storage, freshMeta(readMeta().deviceId)); // first-connect merge rules apply
     metaCache = null;
     failures = 0;
-    update({ connected: true, phase: "idle", message: null, lastMerge: null });
+    // `connected` flips only after the first sync succeeds, so the connect form (and its error message) stays on screen.
+    update({ phase: "idle", message: null, lastMerge: null });
     await syncNow();
 
     if (snapshot.phase === "idle") {
-      start();
+      update({ connected: true, pending: computePending() });
       return { ok: true, summary: snapshot.lastMerge };
     }
     const error = snapshot.phase === "unauthorized" ? "That token was rejected by the server." : (snapshot.message ?? "Could not sync.");

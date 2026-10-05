@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addDays, diffInDays, formatDate, formatDayMonth, isValidDateString, toDateString } from "./dates";
+import { addDays, diffInDays, formatDate, formatDateTime, formatDayMonth, isValidDateString, toDateString } from "./dates";
 
 describe("toDateString", () => {
   it("formats the local calendar date", () => {
@@ -49,6 +49,14 @@ describe("addDays", () => {
     expect(addDays("2024-02-28", 1)).toBe("2024-02-29");
     expect(addDays("2026-03-01", -1)).toBe("2026-02-28");
     expect(addDays("2026-10-06", 168)).toBe("2027-03-23");
+  });
+});
+
+describe("formatDateTime", () => {
+  it("formats an ISO timestamp in local time", () => {
+    const local = new Date(2026, 9, 6, 14, 5);
+    expect(formatDateTime(local.toISOString())).toBe("6 Oct 2026, 14:05");
+    expect(formatDateTime("not a date")).toBe("not a date");
   });
 });
 

@@ -1,9 +1,11 @@
 "use client";
 
 import { TriangleAlert, X } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useAppSnapshot } from "@/hooks/useAppState";
 import { useHydrated } from "@/hooks/useHydrated";
+import { useSyncSnapshot } from "@/hooks/useSync";
 
 const NOT_SAVING =
   "Your progress is not being saved: this browser is blocking local storage (private window?). Export a backup before you close the tab.";
@@ -12,9 +14,11 @@ const NOT_SAVING =
 export function StatusBanner() {
   const hydrated = useHydrated();
   const { persistent, notice } = useAppSnapshot();
+  const sync = useSyncSnapshot();
   const [dismissed, setDismissed] = useState<string | null>(null);
 
-  const message = notice ?? (persistent ? null : NOT_SAVING);
+  const tokenRejected = sync.connected && sync.phase === "unauthorized";
+  const message = tokenRejected ? (sync.message ?? "Cloud sync stopped: the server rejected this device's token.") : (notice ?? (persistent ? null : NOT_SAVING));
   if (!hydrated || message === null || dismissed === message) return null;
 
   return (
@@ -23,7 +27,17 @@ export function StatusBanner() {
       className="mb-6 flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200"
     >
       <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-      <p className="flex-1">{message}</p>
+      <p className="flex-1">
+        {message}
+        {tokenRejected && (
+          <>
+            {" "}
+            <Link href="/settings#sync" className="font-medium underline">
+              Open Cloud sync settings
+            </Link>
+          </>
+        )}
+      </p>
       <button
         type="button"
         onClick={() => setDismissed(message)}

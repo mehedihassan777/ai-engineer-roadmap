@@ -3,6 +3,7 @@
 import { Menu, Rocket, X } from "lucide-react";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
+import { useStartSync } from "@/hooks/useSync";
 import { Modal } from "../ui/Modal";
 import { SidebarContent } from "./SidebarContent";
 import { StatusBanner } from "./StatusBanner";
@@ -12,6 +13,7 @@ import { ThemeToggle } from "./ThemeToggle";
 export function AppShell({ children }: { children: ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = () => setDrawerOpen(false);
+  useStartSync(); // cloud sync stays idle unless this server has it and this device holds a token
 
   return (
     <div className="min-h-dvh lg:flex">

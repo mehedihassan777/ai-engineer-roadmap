@@ -60,6 +60,13 @@ export function formatDate(value: string): string {
   return `${parts.day} ${MONTHS[parts.month - 1]} ${parts.year}`;
 }
 
+/** "6 Oct 2026, 14:05" in the viewer's local time, for an ISO timestamp. */
+export function formatDateTime(iso: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return iso;
+  return `${formatDate(toDateString(date))}, ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 /** "6 Oct" - for compact week ranges. */
 export function formatDayMonth(value: string): string {
   const parts = parse(value);

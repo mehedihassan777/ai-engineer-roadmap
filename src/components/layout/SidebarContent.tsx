@@ -3,6 +3,7 @@
 import { Rocket } from "lucide-react";
 import Link from "next/link";
 import { PLAN } from "@/data/constants";
+import { SyncIndicator } from "../sync/SyncIndicator";
 import { SidebarNav } from "./SidebarNav";
 import { SidebarProgress } from "./SidebarProgress";
 import { ThemeToggle } from "./ThemeToggle";
@@ -25,6 +26,7 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       <SidebarNav onNavigate={onNavigate} />
       <div className="space-y-4 border-t border-line p-4">
         <SidebarProgress />
+        <SyncIndicator />
         <ThemeToggle />
       </div>
     </div>

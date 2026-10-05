@@ -6,6 +6,15 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "--", "--port", "3100"],
       "port": 3100
+    },
+    {
+      "name": "dev-sync",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "set SYNC_STORE=memory&& set SYNC_TOKEN=test-token-for-local-e2e-only-0123456789abcdef&& npm run dev -- --port 3101"
+      ],
+      "port": 3101
     }
   ]
 }
