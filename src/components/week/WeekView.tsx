@@ -9,7 +9,6 @@ import { weekProgress } from "@/lib/progress";
 import { groupTasksByTrack } from "@/lib/roadmap";
 import { DEFAULT_FILTERS, countMatches, matchesFilters, stateOf, type TaskFilters } from "@/lib/task-filters";
 import { Button } from "../ui/Button";
-import { Card } from "../ui/Card";
 import { EmptyState } from "../ui/EmptyState";
 import { ProgressBar } from "../ui/ProgressBar";
 import { TaskFilterBar } from "./TaskFilterBar";
@@ -44,16 +43,16 @@ export function WeekView({ weekNumber }: { weekNumber: number }) {
     <div className="space-y-6">
       <WeekHeader week={week} />
 
-      <Card className="p-4">
+      <div className="border-y border-line py-4">
         <div className="flex items-center gap-4">
           <ProgressBar value={stat.percent} label={`Week ${week.number} progress`} className="flex-1" />
-          <span className="text-sm font-semibold tabular-nums">{formatPercent(stat.percent)}</span>
+          <span className="font-display text-xl font-bold tabular-nums">{formatPercent(stat.percent)}</span>
         </div>
         <p className="mt-2 text-sm text-muted">
-          {stat.doneTasks} of {stat.totalTasks} tasks done · {formatHours(stat.doneHours)} of {formatHours(stat.totalHours)}
-          {stat.inProgressTasks > 0 && ` · ${stat.inProgressTasks} in progress`}
+          {stat.doneTasks} of {stat.totalTasks} tasks done, {formatHours(stat.doneHours)} of {formatHours(stat.totalHours)}
+          {stat.inProgressTasks > 0 && `, ${stat.inProgressTasks} in progress`}
         </p>
-      </Card>
+      </div>
 
       <TaskFilterBar filters={filters} onChange={setFilters} counts={counts} />
 

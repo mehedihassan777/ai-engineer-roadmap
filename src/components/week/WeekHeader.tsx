@@ -32,7 +32,7 @@ function WeekNavigation({ week }: { week: number }) {
         aria-label="Jump to week"
         value={week}
         onChange={(event) => router.push(`/week/${event.target.value}`)}
-        className="h-8 rounded-lg border border-line bg-surface px-2 text-sm"
+        className="h-8 rounded-md border border-line bg-surface px-2 text-sm"
       >
         {roadmap.weeks.map((candidate) => (
           <option key={candidate.number} value={candidate.number}>
@@ -62,7 +62,7 @@ export function WeekHeader({ week }: { week: ResolvedWeek }) {
   return (
     <>
       <PageHeader
-        eyebrow={phase ? `Phase ${phase.number} · ${phase.title}` : undefined}
+        eyebrow={phase ? `Phase ${phase.number}: ${phase.title}` : undefined}
         title={`Week ${week.number}: ${week.title}`}
         description={week.summary}
         actions={<WeekNavigation week={week.number} />}

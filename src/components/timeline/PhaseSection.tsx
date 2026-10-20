@@ -37,10 +37,10 @@ export function PhaseSection({ phase, open, onToggle, stat, weekStats, currentWe
         >
           <ChevronDown className={cn("mt-1 size-5 shrink-0 text-muted transition-transform", !open && "-rotate-90")} aria-hidden="true" />
           <span className="min-w-0 flex-1">
-            <span className="block text-lg font-semibold">
+            <span className="block text-xl font-bold font-display">
               Phase {phase.number}: {phase.title}
             </span>
-            <span className="mt-0.5 block text-sm text-muted">
+            <span className="mt-0.5 block text-muted">
               Weeks {phase.weeks[0]}–{phase.weeks[1]}
             </span>
             <span className="mt-2 flex flex-wrap gap-1.5">

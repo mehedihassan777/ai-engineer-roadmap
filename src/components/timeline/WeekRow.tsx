@@ -8,7 +8,6 @@ import { formatPercent } from "@/lib/format";
 import type { ProgressStat } from "@/lib/progress";
 import type { ResolvedWeek } from "@/lib/roadmap";
 import { weekDateRange } from "@/lib/schedule";
-import { Badge } from "../ui/Badge";
 import { ProgressBar } from "../ui/ProgressBar";
 
 interface WeekRowProps {
@@ -28,8 +27,8 @@ export function WeekRow({ number, week, stat, isCurrent, startDate }: WeekRowPro
   const badge = (
     <span
       className={cn(
-        "flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold tabular-nums",
-        complete ? "bg-emerald-500 text-white" : isCurrent ? "bg-accent text-accent-foreground" : "bg-surface-muted text-muted",
+        "flex size-9 shrink-0 items-center justify-center rounded-[4px] font-display text-sm font-bold tabular-nums",
+        complete ? "bg-accent text-accent-foreground" : isCurrent ? "bg-highlight text-highlight-foreground ring-1 ring-foreground" : "bg-surface-muted text-muted",
       )}
     >
       {complete ? <CircleCheck className="size-5" aria-hidden="true" /> : number}
@@ -52,7 +51,7 @@ export function WeekRow({ number, week, stat, isCurrent, startDate }: WeekRowPro
   const dsa = week.dsa.kind === "mock" ? "Mock interview" : (patternById.get(week.dsa.patternId)?.name ?? week.dsa.patternId);
 
   return (
-    <li className={cn(isCurrent && "bg-accent-soft/50")}>
+    <li>
       <Link
         href={`/week/${number}`}
         aria-current={isCurrent ? "date" : undefined}
@@ -60,13 +59,9 @@ export function WeekRow({ number, week, stat, isCurrent, startDate }: WeekRowPro
       >
         {badge}
         <div className="min-w-0 flex-1 basis-60">
-          <p className="font-medium">
+          <p className="font-semibold">
             {week.title}
-            {isCurrent && (
-              <Badge tone="accent" className="ml-2 align-middle">
-                current
-              </Badge>
-            )}
+            {isCurrent && <span className="ml-2 text-sm font-normal text-muted">this week</span>}
           </p>
           <p className="mt-0.5 flex flex-wrap items-center gap-x-3 text-xs text-muted">
             {range && (
