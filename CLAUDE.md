@@ -6,7 +6,7 @@ A personal 24-week "AI Engineer Roadmap" tracker: Next.js (App Router) + TypeScr
 Progress lives in the browser's `localStorage` (export/import as JSON). **Optional cloud sync**: when the server has `DATABASE_URL` (Neon) and `SYNC_TOKEN`, two route handlers (`/api/sync`, `/api/health`) let every device with the token share the same progress. Without them the app is purely client-side.
 **All roadmap content is typed data in `src/data/`**, kept separate from UI so content can be edited without touching components.
 
-> Build status: stages 1–3 of 6 done (scaffold, data layer + logic, app shell + dashboard / this week / timeline / all tasks / settings), plus optional Neon cloud sync. Still to come: projects, stack pages, learn-vs-delegate and the DSA tracker (stage 4); weeks 3–24 and projects 2–5 (stages 4–5); final docs and hardening (stage 6). Sections marked _(planned)_ describe that later work — update this file as each stage lands.
+> Build status: stages 1–3 of 6 done (scaffold, data layer + logic, app shell + dashboard / this week / timeline / all tasks / settings), plus optional Neon cloud sync and all 24 weeks of content. Still to come: projects, stack pages, learn-vs-delegate and the DSA tracker (stage 4); projects 2–5 (stages 4–5); final docs and hardening (stage 6). Sections marked _(planned)_ describe that later work — update this file as each stage lands.
 
 ## Commands
 
@@ -101,7 +101,7 @@ After any edit run `npm run validate:content` (it catches duplicate ids, missing
 - **Tracks / phases / DSA patterns**: `tracks.ts`, `phases.ts`, `dsa-patterns.ts`. New closed ids (a project, a stack page, a DSA pattern) also go in `ids.ts`; project titles live in `PROJECT_TITLES` there.
 - _(planned: projects, stack topics, learn-vs-delegate cards — documented when stage 4 lands.)_
 
-`src/lib/validate-content.test.ts` currently passes `allowPartialPlan: true` because weeks 3–24 and some projects are not written yet. **Remove that option in stage 5** so a missing week fails the build.
+`src/lib/validate-content.test.ts` currently passes `allowPartialPlan: true` because projects 2–5, the stack pages and the skill cards are not written yet (all 24 weeks exist, and a test already fails if a week goes missing). **Remove that option in stage 5** so the whole plan is checked.
 
 ## Known environment notes
 
