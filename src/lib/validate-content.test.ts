@@ -4,8 +4,8 @@ import { describe, expect, it } from "vitest";
 import { validateContent } from "./validate-content";
 
 /**
- * TODO(stage 5): remove `allowPartialPlan` once weeks 6-24, projects 2-5, the stack pages and the
- * skill cards exist. From then on `validateContent(CONTENT, PLAN)` must return no issues.
+ * TODO(stage 5): remove `allowPartialPlan` once projects 2-5, the stack pages and the skill cards
+ * exist (all 24 weeks are written). From then on `validateContent(CONTENT, PLAN)` must return no issues.
  */
 const PARTIAL = { allowPartialPlan: true } as const;
 
@@ -13,9 +13,13 @@ const clone = (): Content => structuredClone(CONTENT);
 const issuesFor = (content: Content, plan: PlanConfig = PLAN) => validateContent(content, plan, PARTIAL);
 const expectIssue = (issues: string[], pattern: RegExp) => expect(issues.some((issue) => pattern.test(issue))).toBe(true);
 
-/** Copies an existing week to a new number with unique task ids and no project link, so only the rule under test fires. */
+/**
+ * Copies an existing week to a new number (replacing the real week with that number) with unique task ids and no
+ * project link, so only the rule under test fires.
+ */
 function addWeekCopy(content: Content, fromIndex: number, number: number, phaseId: PhaseId): Week {
   const week = structuredClone(content.weeks[fromIndex]);
+  content.weeks = content.weeks.filter((existing) => existing.number !== number); // replace the real week, if any
   week.number = number;
   week.phaseId = phaseId;
   week.projectId = undefined;
@@ -29,10 +33,9 @@ describe("the real content", () => {
     expect(validateContent(CONTENT, PLAN, PARTIAL)).toEqual([]);
   });
 
-  it("lists what is still missing when the plan must be complete", () => {
+  it("has all weeks, and lists what else is still missing when the plan must be complete", () => {
     const issues = validateContent(CONTENT, PLAN);
-    expectIssue(issues, /Week 3 is missing/);
-    expectIssue(issues, /Week 24 is missing/);
+    expect(issues.filter((issue) => /^Week \d+/.test(issue))).toEqual([]); // every week exists and is valid
     expectIssue(issues, /Project "docs-qa" is missing/);
     expectIssue(issues, /Stack page "mcp" is missing/);
     expectIssue(issues, /No 'master' skill cards/);
