@@ -28,7 +28,7 @@ function StatusControl({ task, state }: { task: ResolvedTask; state: TaskState }
         type="button"
         onClick={() => actions.setTaskStatus(task.id, "todo")}
         title="In progress - click to move back to To do"
-        className="inline-flex h-7 items-center gap-1 rounded-full bg-accent-soft px-2.5 text-xs font-medium text-accent hover:opacity-80"
+        className="inline-flex h-7 items-center gap-1 rounded-md bg-accent-soft px-2.5 text-xs font-semibold text-accent hover:opacity-80"
       >
         <CircleDot className="size-3.5" aria-hidden="true" />
         In progress
@@ -50,11 +50,11 @@ export function TaskItem({ task, state, showTrack = false }: TaskItemProps) {
   const track = trackById.get(task.track);
 
   return (
-    <li className={cn("flex gap-3 px-4 py-3", done && "bg-surface-muted/50")}>
+    <li className={cn("flex gap-3 px-4 py-4 sm:px-5", done && "bg-surface-muted/50")}>
       <Checkbox checked={done} onChange={() => actions.toggleTaskDone(task.id)} aria-labelledby={titleId} className="mt-0.5" />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1.5">
-          <p id={titleId} className={cn("font-medium", done && "text-muted line-through")}>
+          <p id={titleId} className={cn("font-semibold", done && "text-muted line-through")}>
             {task.title}
           </p>
           <div className="flex shrink-0 items-center gap-2">
@@ -68,7 +68,7 @@ export function TaskItem({ task, state, showTrack = false }: TaskItemProps) {
             <StatusControl task={task} state={state} />
           </div>
         </div>
-        {task.detail && <p className="mt-1 text-sm text-muted">{task.detail}</p>}
+        {task.detail && <p className="mt-1 max-w-[72ch] text-muted">{task.detail}</p>}
         <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1" aria-label="Resources">
           {task.resources.map((resource) => (
             <li key={resource.title}>

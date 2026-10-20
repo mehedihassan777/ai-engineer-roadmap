@@ -5,28 +5,34 @@
 
 /* Semantic colour tokens. Components use bg-surface, text-muted, border-line ... and never need dark: for them. */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --surface: #ffffff;
-  --surface-muted: #f1f5f9;
-  --line: #e2e8f0;
-  --muted: #55637a;
-  --accent: #4f46e5;
-  --accent-soft: #eef2ff;
+  /* Paper, ink and one highlighter. See DESIGN.md. */
+  --background: #f2f4f1;
+  --foreground: #17213a;
+  --surface: #fcfdfb;
+  --surface-muted: #e7ebe5;
+  --line: #d7ddd5;
+  --muted: #566175;
+  --accent: #2a46c2;
+  --accent-soft: #e2e7f8;
   --accent-foreground: #ffffff;
+  /* The highlighter means "now" (current week, you are here) and nothing else. */
+  --highlight: #f6de4c;
+  --highlight-foreground: #17213a;
   color-scheme: light;
 }
 
 .dark {
-  --background: #0b1120;
-  --foreground: #e2e8f0;
-  --surface: #111a2e;
-  --surface-muted: #18233b;
-  --line: #243049;
-  --muted: #94a3b8;
-  --accent: #818cf8;
-  --accent-soft: #1b2347;
-  --accent-foreground: #0b1120;
+  --background: #13171e;
+  --foreground: #e5e9ef;
+  --surface: #1a2029;
+  --surface-muted: #232b37;
+  --line: #2c3544;
+  --muted: #9aa4b3;
+  --accent: #93a7ff;
+  --accent-soft: #232d4d;
+  --accent-foreground: #13171e;
+  --highlight: #d8c048;
+  --highlight-foreground: #13171e;
   color-scheme: dark;
 }
 
@@ -40,14 +46,43 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-foreground: var(--accent-foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-heading);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading), var(--font-body), ui-sans-serif, sans-serif;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* A highlighter stroke behind inline text: slightly uneven edges, like a real marker. */
+.marker {
+  background-image: linear-gradient(100deg, transparent 0.25em, var(--highlight) 0.35em, var(--highlight) calc(100% - 0.3em), transparent calc(100% - 0.2em));
+  background-size: 100% 0.62em;
+  background-position: 0 88%;
+  background-repeat: no-repeat;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* On dark paper light text cannot sit on yellow, so the stroke becomes a thick underline. */
+.dark .marker {
+  background-size: 100% 0.2em;
+  background-position: 0 100%;
 }
 
 :focus-visible {

@@ -11,14 +11,14 @@ export function ScheduleBanner({ info, startDate }: { info: ScheduleInfo; startD
   const finished = info.status === "finished";
   const Icon = finished ? PartyPopper : CalendarClock;
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-xl border border-accent/30 bg-accent-soft p-4 text-sm">
+    <div className="flex flex-wrap items-center gap-3 rounded-[10px] border border-line bg-surface p-4">
       <Icon className="size-5 shrink-0 text-accent" aria-hidden="true" />
       <p className="flex-1">
         {finished ? (
           <>The 24-week window has passed. Anything unfinished stays on your list; use All tasks to finish it off.</>
         ) : (
           <>
-            Your plan starts on <strong>{formatDate(startDate)}</strong> — in {info.daysUntilStart} {plural(info.daysUntilStart, "day")}. Week 1 is shown below.
+            Your plan starts on <strong>{formatDate(startDate)}</strong>, in {info.daysUntilStart} {plural(info.daysUntilStart, "day")}. Week 1 is shown below.
           </>
         )}
       </p>

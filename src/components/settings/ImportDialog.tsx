@@ -57,7 +57,7 @@ export function ImportDialog({ pending, current, onConfirm, onCancel }: ImportDi
       )}
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-line text-xs text-muted uppercase">
+          <tr className="border-b border-line text-xs text-muted">
             <th scope="col" className="py-1.5 font-semibold">
               &nbsp;
             </th>

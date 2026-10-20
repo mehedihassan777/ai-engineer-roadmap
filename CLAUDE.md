@@ -46,6 +46,10 @@ scripts/check-links.mjs
 Routes: `/` dashboard · `/week` (current week) · `/week/[n]` · `/timeline` · `/tasks` (all tasks, filters in the URL) · `/settings`.
 _(planned: `/projects`, `/projects/[slug]`, `/stacks`, `/stacks/[slug]`, `/learn-vs-delegate`, `/dsa`.)_
 
+## Look and feel
+
+Before changing the UI, read `.claude/skills/frontend-design/SKILL.md` (Anthropic's frontend-design skill) and `DESIGN.md` (this app's plan made with it: paper/ink/highlighter palette, Bricolage Grotesque + Atkinson Hyperlegible Next, the dashboard route). Colours are tokens in `src/app/globals.css`; the yellow `highlight` token means "now" (current week) and nothing else. Sentence-case labels, no all-caps eyebrows.
+
 ## Architecture rules (ESLint enforces the import ones)
 
 Dependencies point inward: `app/`, `components/`, `hooks/` → `lib/` → `data/`.

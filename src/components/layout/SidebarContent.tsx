@@ -1,6 +1,5 @@
 "use client";
 
-import { Rocket } from "lucide-react";
 import Link from "next/link";
 import { PLAN } from "@/data/constants";
 import { SyncIndicator } from "../sync/SyncIndicator";
@@ -12,15 +11,14 @@ import { ThemeToggle } from "./ThemeToggle";
 export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <div className="flex h-full flex-col">
-      <Link href="/" onClick={onNavigate} className="flex items-center gap-3 px-6 pt-6 pb-2">
-        <span className="flex size-9 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-          <Rocket className="size-5" aria-hidden="true" />
+      <Link href="/" onClick={onNavigate} className="block px-6 pt-7 pb-3">
+        <span className="block font-display text-xl leading-tight font-bold tracking-tight">
+          AI Engineer
+          <br />
+          Roadmap
         </span>
-        <span className="leading-tight">
-          <span className="block text-sm font-semibold">AI Engineer Roadmap</span>
-          <span className="block text-xs text-muted">
-            {PLAN.totalWeeks} weeks · {PLAN.weeklyHours} h/week
-          </span>
+        <span className="mt-1 block text-sm text-muted">
+          {PLAN.totalWeeks} weeks, {PLAN.weeklyHours} hours a week
         </span>
       </Link>
       <SidebarNav onNavigate={onNavigate} />

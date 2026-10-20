@@ -7,7 +7,6 @@ import { plural } from "@/lib/format";
 import { computeDayStreak, computeWeekStreak } from "@/lib/streak";
 import { sessionDates } from "@/lib/dsa-stats";
 import { cn } from "@/lib/cn";
-import { Card } from "../ui/Card";
 
 interface StreakCardProps {
   today: string;
@@ -25,14 +24,14 @@ export function StreakCard({ today, startDate }: StreakCardProps) {
   const sessions = Math.min(week.sessionsThisWeek, target);
 
   return (
-    <Card className="p-5">
-      <h2 className="text-sm font-medium text-muted">LeetCode streak</h2>
+    <section className="border-t border-line pt-5">
+      <h2 className="text-xl font-bold">LeetCode streak</h2>
       <div className="mt-2 flex items-center gap-3">
         <Flame
           className={cn("size-9", day.current > 0 ? "text-orange-500" : "text-muted/50")}
           aria-hidden="true"
         />
-        <p className="text-4xl font-semibold tabular-nums">
+        <p className="font-display text-4xl font-bold tabular-nums">
           {day.current}
           <span className="ml-1.5 text-base font-normal text-muted">{plural(day.current, "day")}</span>
         </p>
@@ -42,7 +41,7 @@ export function StreakCard({ today, startDate }: StreakCardProps) {
       </p>
 
       <div className="mt-4">
-        <p className="text-xs font-semibold tracking-wide text-muted uppercase">This week&apos;s sessions</p>
+        <p className="text-sm font-semibold">This week&apos;s sessions</p>
         <div className="mt-2 flex items-center gap-2">
           {Array.from({ length: target }, (_, index) => (
             <span
@@ -61,6 +60,6 @@ export function StreakCard({ today, startDate }: StreakCardProps) {
       </div>
 
       {dsaLog.length === 0 && <p className="mt-3 text-sm text-muted">Log your first problem in the DSA tracker to start a streak.</p>}
-    </Card>
+    </section>
   );
 }

@@ -26,7 +26,7 @@ interface TaskFilterBarProps {
 function FilterRow({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div role="group" aria-label={label} className="flex flex-wrap items-center gap-2">
-      <span className="w-14 shrink-0 text-xs font-semibold tracking-wide text-muted uppercase">{label}</span>
+      <span className="w-14 shrink-0 text-sm text-muted">{label}</span>
       {children}
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Rocket, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { useStartSync } from "@/hooks/useSync";
@@ -24,7 +24,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         Skip to content
       </a>
 
-      <aside className="hidden border-r border-line bg-surface lg:sticky lg:top-0 lg:block lg:h-dvh lg:w-64 lg:shrink-0">
+      <aside className="hidden border-r border-line bg-background lg:sticky lg:top-0 lg:block lg:h-dvh lg:w-64 lg:shrink-0">
         <SidebarContent />
       </aside>
 
@@ -40,8 +40,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               <Menu className="size-5" aria-hidden="true" />
             </button>
-            <Link href="/" className="flex items-center gap-2 text-sm font-semibold">
-              <Rocket className="size-4 text-accent" aria-hidden="true" />
+            <Link href="/" className="font-display font-bold tracking-tight">
               AI Engineer Roadmap
             </Link>
           </div>
@@ -53,7 +52,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           onClose={closeDrawer}
           aria-label="Navigation"
           className="m-0 mr-auto h-dvh max-h-none w-72 max-w-[85vw]"
-          panelClassName="relative h-full border-r border-line bg-surface text-foreground shadow-xl"
+          panelClassName="relative h-full border-r border-line bg-background text-foreground shadow-xl"
         >
           <button
             type="button"
@@ -66,7 +65,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <SidebarContent onNavigate={closeDrawer} />
         </Modal>
 
-        <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+        <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 py-7 sm:px-6 lg:px-12 lg:py-12">
           <StatusBanner />
           {children}
         </main>
